@@ -8,10 +8,19 @@
 
 import UIKit
 
-class CategorySwitchCell: UITableViewCell {
+protocol CategorySwichDelegate: class {
+    func categorySwitchvalueChanged(sender: CategorySwitchCell, value: Bool)
+}
 
+class CategorySwitchCell: UITableViewCell {
+    
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var categorySwitch: UISwitch!
+    weak var delegate: CategorySwichDelegate?
+    
+    @IBAction func switchTaped(_ sender: Any) {
+        delegate?.categorySwitchvalueChanged(sender: self, value: categorySwitch.isOn)
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,7 +29,6 @@ class CategorySwitchCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
 

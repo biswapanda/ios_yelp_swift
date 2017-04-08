@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SettingsViewControllerDelegate {
     
     var businesses: [Business]!
     
@@ -60,5 +60,28 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         return self.businesses?.count ?? 0
     }
 
+    func filtersChanged(sender: SettingsViewController, filters: [String : Bool]) {
+        print("filtersChanged: \(filters)")
+        var categories: [String] = []
+        for (k, v) in filters {
+            if v {
+                categories.append(k)
+            }
+        }
+        print("\(categories)")
+        Business.searchWithTerm(term: "Restaurants",
+                                sort: .distance,
+                                categories: categories,
+                                deals: true)
+        { (businesses: [Business]?, error: Error?) -> Void in
+            self.businesses = businesses
+            self.businessTableView.reloadData()
+        }
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let navController = segue.destination as! UINavigationController
+        let settingsController = navController.topViewController as! SettingsViewController
+        settingsController.delegate = self
+    }
 }

@@ -156,6 +156,9 @@
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GRS-qN-0js">
                                                     <rect key="frame" x="291" y="41" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="switchTaped:" destination="wiY-aB-yYW" eventType="valueChanged" id="v9x-jb-mev"/>
+                                                    </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0bA-WV-PCe">
                                                     <rect key="frame" x="35" y="15" width="42" height="82.5"/>
