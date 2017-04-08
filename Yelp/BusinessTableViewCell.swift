@@ -25,7 +25,6 @@ class BusinessTableViewCell: UITableViewCell {
             addressLabel.text = business?.address!
             reviewsLabel.text = "\(business?.reviewCount! ?? 0) Reviews"
             nameLabel.text = business?.name
-            print((business?.ratingImageURL!)!)
         }
     }
     

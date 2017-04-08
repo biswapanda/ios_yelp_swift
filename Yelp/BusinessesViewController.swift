@@ -24,13 +24,6 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
             
             self.businesses = businesses
             self.businessTableView.reloadData()
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
-            
             }
         )
         
