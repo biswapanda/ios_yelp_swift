@@ -14,9 +14,9 @@ protocol SettingsViewControllerDelegate: class {
 
 enum FilterType: Int {
     case Deal = 0
-    case Category = 1
+    case Distance = 1
     case SortBy = 2
-    case Distance = 3
+    case Category = 3
 }
 
 class SettingsViewController: UIViewController, UITableViewDelegate,
