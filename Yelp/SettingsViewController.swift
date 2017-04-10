@@ -39,9 +39,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate,
     var isDeal: Bool = false
     let multiSelectDataSourceByFilterType = [
         FilterType.Distance: MultiSelectDataSource([("Auto", 0),
-                                                 ("3 miles", 3.0),
-                                                 ("5 miles", 5.0) ,
-                                                 ("20 mile", 20.0)]),
+                                                 (".3 miles", 0.3),
+                                                 ("1 miles", 1.0) ,
+                                                 ("3 miles", 3.0) ,
+                                                 ("5 mile", 20.0)]),
         FilterType.SortBy: MultiSelectDataSource([ ("Best Matched", 0),
                                                 ("Distance", 1),
                                                 ("Highest Rated", 2)])
