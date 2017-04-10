@@ -52,17 +52,16 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         return self.filteredBusinesses()?.count ?? 0
     }
 
-    func filtersChanged(sender: SettingsViewController, filters: [String : Bool]) {
+    func filtersChanged(sender: SettingsViewController, filters: [String : Bool],
+                        sort: YelpSortMode?, deals: Bool?) {
         var categories: [String] = []
         for (k, v) in filters {
             if v {
                 categories.append(k)
             }
         }
-        Business.searchWithTerm(term: "Restaurants",
-                                sort: .distance,
-                                categories: categories,
-                                deals: true)
+        Business.searchWithTerm(term: "Restaurants", sort: sort,
+                                categories: categories, deals: deals)
         { (businesses: [Business]?, error: Error?) -> Void in
             self.businesses = businesses
             self.businessTableView.reloadData()

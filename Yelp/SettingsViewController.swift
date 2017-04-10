@@ -9,7 +9,8 @@
 import UIKit
 
 protocol SettingsViewControllerDelegate: class {
-    func filtersChanged(sender: SettingsViewController, filters: [String: Bool])
+    func filtersChanged(sender: SettingsViewController, filters: [String : Bool],
+                        sort: YelpSortMode?, deals: Bool?)
 }
 
 enum FilterType: Int {
@@ -39,10 +40,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate,
     var isDeal: Bool = false
     let multiSelectDataSourceByFilterType = [
         FilterType.Distance: MultiSelectDataSource([("Auto", 0),
-                                                 (".3 miles", 0.3),
+                                                 ("0.3 miles", 0.3),
                                                  ("1 miles", 1.0) ,
-                                                 ("3 miles", 3.0) ,
-                                                 ("5 mile", 20.0)]),
+                                                 ("5 miles", 5.0) ,
+                                                 ("20 mile", 20.0)]),
         FilterType.SortBy: MultiSelectDataSource([ ("Best Matched", 0),
                                                 ("Distance", 1),
                                                 ("Highest Rated", 2)])
@@ -157,7 +158,20 @@ class SettingsViewController: UIViewController, UITableViewDelegate,
     
     @IBAction func onSaveButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
-        delegate?.filtersChanged(sender: self, filters: self.switchStateByCategory)
+        var sortMode: YelpSortMode?
+        let md_sort = self.multiSelectDataSourceByFilterType[.SortBy]!
+        switch(Int(md_sort.selectedValue())) {
+        case 0:
+            sortMode = YelpSortMode.bestMatched
+        case 1:
+            sortMode = YelpSortMode.distance
+        case 3:
+            sortMode = YelpSortMode.highestRated
+        default:
+            sortMode = nil
+        }
+        delegate?.filtersChanged(sender: self, filters: self.switchStateByCategory,
+                                 sort: sortMode, deals: isDeal)
     }
     
     func categorySwitchvalueChanged(sender: CategorySwitchCell, value: Bool) {
