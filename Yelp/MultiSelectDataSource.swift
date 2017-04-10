@@ -33,6 +33,10 @@ class MultiSelectDataSource <ValueType> {
         }
     }
     
+    func selectedValue() -> ValueType {
+        return valueForName[names[selectedNameIndex]]!
+    }
+    
     func getNameForIndex(index: Int) -> String? {
         if index >= names.count {
             return nil
