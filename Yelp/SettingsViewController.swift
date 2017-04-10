@@ -12,16 +12,15 @@ protocol SettingsViewControllerDelegate: class {
     func filtersChanged(sender: SettingsViewController, filters: [String: Bool])
 }
 
-
 enum FilterType: Int {
     case Deal = 0
     case Category = 1
-    case Distance = 2
-    case SortBy = 3
+    case SortBy = 2
+    case Distance = 3
 }
 
-
-class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CategorySwichDelegate {
+class SettingsViewController: UIViewController, UITableViewDelegate,
+    UITableViewDataSource, CategorySwichDelegate, MultiSelectTableViewCellDelegate {
 
     @IBOutlet weak var filterTableView: UITableView!
     
@@ -38,6 +37,138 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     var categories: [[String: String]]!
     var switchStateByCategory: [String: Bool] = [:]
     var isDeal: Bool = false
+    let multiSelectDataSourceByFilterType = [
+        FilterType.Distance: MultiSelectDataSource([("Auto", 0),
+                                                 ("3 miles", 3.0),
+                                                 ("5 miles", 5.0) ,
+                                                 ("20 mile", 20.0)]),
+        FilterType.SortBy: MultiSelectDataSource([ ("Best Matched", 0),
+                                                ("Distance", 1),
+                                                ("Highest Rated", 2)])
+    ]
+    
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let filterType = FilterType.init(rawValue: indexPath.section)!
+        switch filterType {
+        case .Category:
+            let cell = filterTableView.dequeueReusableCell(
+                withIdentifier: "CategorySwitchCell", for: indexPath) as! CategorySwitchCell
+            cell.delegate = self
+            let category = categories[indexPath.row]
+            cell.nameLabel.text = category["name"]
+            cell.categorySwitch.isOn = switchStateByCategory[category["code"]!] ?? false
+            return cell
+        case .Deal:
+            let cell = filterTableView.dequeueReusableCell(
+                withIdentifier: "CategorySwitchCell", for: indexPath) as! CategorySwitchCell
+            cell.delegate = self
+            cell.nameLabel.text = "Offering A Deal"
+            cell.categorySwitch.isOn = isDeal
+            return cell
+        case .SortBy:
+            fallthrough
+        case .Distance:
+            let mds = multiSelectDataSourceByFilterType[filterType]!
+            let distanceOption = mds.getNameForIndex(index: indexPath.row)
+            let cell = filterTableView.dequeueReusableCell(withIdentifier:
+                "MultiSelectTableViewCell", for: indexPath) as! MultiSelectTableViewCell
+            cell.optionLabel.text = distanceOption
+            var imageName: String!
+            if mds.isExpanded {
+                imageName = (indexPath.row == 0) ? "ok_green":  "ok_white"
+            } else {
+                imageName = "expand_arrow"
+            }
+            cell.selectStateButton.setImage(UIImage(named: imageName),
+                                            for: UIControlState.normal)
+            cell.selectedValue = distanceOption
+            cell.delegate = self
+            return cell
+        default:
+            return UITableViewCell()
+        }
+    }
+    
+    
+    func multiSelectTableViewCellButtonTapped(sender: MultiSelectTableViewCell,
+                                              selectedValue: String?) {
+        let indexPath = filterTableView.indexPath(for: sender)!
+        if let filterType: FilterType = FilterType.init(rawValue: indexPath.section) {
+            let mds = multiSelectDataSourceByFilterType[filterType]!
+            mds.toggleExpanded()
+            mds.selectName(name: selectedValue!)
+            filterTableView.reloadData()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let filterType = FilterType.init(rawValue: section) {
+            switch filterType {
+            case .Category:
+                return 3
+            case .Deal:
+                return 1
+            case .Distance:
+                fallthrough
+            case .SortBy:
+                let mds = multiSelectDataSourceByFilterType[filterType]!
+                return mds.isExpanded ? mds.names.count : 1
+            default:
+                return 0
+            }
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let filterType = FilterType.init(rawValue: section) {
+            switch filterType {
+            case .Category:
+                return "Category"
+            case .Deal:
+                return nil
+            case .Distance:
+                return "Distance"
+            case .SortBy:
+                return "Sort By"
+            default:
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func onCancelButton(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func onSaveButton(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+        delegate?.filtersChanged(sender: self, filters: self.switchStateByCategory)
+    }
+    
+    func categorySwitchvalueChanged(sender: CategorySwitchCell, value: Bool) {
+        let indexPath = filterTableView.indexPath(for: sender)!
+        if indexPath.section == FilterType.Deal.rawValue {
+            isDeal = value
+        } else {
+            let rowNum = indexPath.row
+            let category = categories[rowNum]
+            switchStateByCategory[category["code"]!] = value
+        }
+    }
     
     func yelpCategories() -> [[String: String]] {
         return [
@@ -162,96 +293,5 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             ["name": "Waffles", "code": "waffles"],
             ["name": "Wraps", "code": "wraps"],
         ]
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let filterType = FilterType.init(rawValue: indexPath.section)!
-        switch filterType {
-            case .Category:
-                let cell = filterTableView.dequeueReusableCell(
-                    withIdentifier: "CategorySwitchCell", for: indexPath) as! CategorySwitchCell
-                cell.delegate = self
-                let category = categories[indexPath.row]
-                cell.nameLabel.text = category["name"]
-                cell.categorySwitch.isOn = switchStateByCategory[category["code"]!] ?? false
-               return cell
-            case .Deal:
-                let cell = filterTableView.dequeueReusableCell(
-                    withIdentifier: "CategorySwitchCell", for: indexPath) as! CategorySwitchCell
-                cell.delegate = self
-                cell.nameLabel.text = "Offering A Deal"
-                cell.categorySwitch.isOn = isDeal
-                return cell
-            default:
-                return UITableViewCell()
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let filterType = FilterType.init(rawValue: section) {
-            switch filterType {
-            case .Category:
-                return 3
-            case .Deal:
-                return 1
-            case .Distance:
-                return 3
-            case .SortBy:
-                return 1
-            default:
-                return 0
-            }
-        } else {
-            return 0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if let filterType = FilterType.init(rawValue: section) {
-            switch filterType {
-            case .Category:
-                return "Category"
-            case .Deal:
-                return nil
-            case .Distance:
-                return "Distance"
-            case .SortBy:
-                return "Sort By"
-            default:
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    @IBAction func onCancelButton(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func onSaveButton(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-        delegate?.filtersChanged(sender: self, filters: self.switchStateByCategory)
-    }
-    
-    func categorySwitchvalueChanged(sender: CategorySwitchCell, value: Bool) {
-        let indexPath = filterTableView.indexPath(for: sender)!
-        if indexPath.section == FilterType.Deal.rawValue {
-            isDeal = value
-        } else {
-            let rowNum = indexPath.row
-            let category = categories[rowNum]
-            switchStateByCategory[category["code"]!] = value
-        }
     }
 }

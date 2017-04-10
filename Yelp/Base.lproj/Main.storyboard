@@ -179,6 +179,43 @@
                                             <outlet property="nameLabel" destination="0bA-WV-PCe" id="hqK-qr-aMD"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MultiSelectTableViewCell" rowHeight="48" id="VWx-iG-Uz6" customClass="MultiSelectTableViewCell" customModule="Yelp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="375" height="48"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VWx-iG-Uz6" id="e1i-SY-5Pp">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="47.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Best Match" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cwf-S6-e6a">
+                                                    <rect key="frame" x="15" y="13" width="87" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GA7-oO-FiY">
+                                                    <rect key="frame" x="324" y="11" width="25" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="25" id="AxM-eZ-qY3"/>
+                                                        <constraint firstAttribute="height" constant="25" id="uDb-5V-s0v"/>
+                                                    </constraints>
+                                                    <state key="normal" image="expand_arrow"/>
+                                                    <connections>
+                                                        <action selector="buttonTapped:" destination="VWx-iG-Uz6" eventType="touchUpInside" id="CGC-k2-Qgk"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="GA7-oO-FiY" secondAttribute="trailing" constant="26" id="1tk-3Q-Fib"/>
+                                                <constraint firstItem="GA7-oO-FiY" firstAttribute="centerY" secondItem="e1i-SY-5Pp" secondAttribute="centerY" id="acB-St-V0t"/>
+                                                <constraint firstItem="cwf-S6-e6a" firstAttribute="leading" secondItem="e1i-SY-5Pp" secondAttribute="leading" constant="15" id="jEL-sj-aCJ"/>
+                                                <constraint firstItem="cwf-S6-e6a" firstAttribute="centerY" secondItem="e1i-SY-5Pp" secondAttribute="centerY" id="moQ-uN-6dD"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="optionLabel" destination="cwf-S6-e6a" id="cS7-43-Dpm"/>
+                                            <outlet property="selectStateButton" destination="GA7-oO-FiY" id="kOD-Os-PZp"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
@@ -241,4 +278,7 @@
             <point key="canvasLocation" x="3618.4000000000001" y="357.57121439280365"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="expand_arrow" width="25" height="25"/>
+    </resources>
 </document>
