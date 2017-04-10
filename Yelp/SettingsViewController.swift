@@ -13,6 +13,14 @@ protocol SettingsViewControllerDelegate: class {
 }
 
 
+enum FilterType: Int {
+    case Deal = 0
+    case Category = 1
+    case Distance = 2
+    case SortBy = 3
+}
+
+
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CategorySwichDelegate {
 
     @IBOutlet weak var filterTableView: UITableView!
@@ -29,6 +37,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
     var categories: [[String: String]]!
     var switchStateByCategory: [String: Bool] = [:]
+    var isDeal: Bool = false
     
     func yelpCategories() -> [[String: String]] {
         return [
@@ -157,21 +166,69 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = filterTableView.dequeueReusableCell(withIdentifier: "CategorySwitchCell",
-                                                       for: indexPath) as! CategorySwitchCell
-        cell.delegate = self
-        let category = categories[indexPath.row]
-        cell.nameLabel.text = category["name"]
-        cell.categorySwitch.isOn = switchStateByCategory[category["code"]!] ?? false
-        return cell
+        let filterType = FilterType.init(rawValue: indexPath.section)!
+        switch filterType {
+            case .Category:
+                let cell = filterTableView.dequeueReusableCell(
+                    withIdentifier: "CategorySwitchCell", for: indexPath) as! CategorySwitchCell
+                cell.delegate = self
+                let category = categories[indexPath.row]
+                cell.nameLabel.text = category["name"]
+                cell.categorySwitch.isOn = switchStateByCategory[category["code"]!] ?? false
+               return cell
+            case .Deal:
+                let cell = filterTableView.dequeueReusableCell(
+                    withIdentifier: "CategorySwitchCell", for: indexPath) as! CategorySwitchCell
+                cell.delegate = self
+                cell.nameLabel.text = "Offering A Deal"
+                cell.categorySwitch.isOn = isDeal
+                return cell
+            default:
+                return UITableViewCell()
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.categories.count
+        if let filterType = FilterType.init(rawValue: section) {
+            switch filterType {
+            case .Category:
+                return 3
+            case .Deal:
+                return 1
+            case .Distance:
+                return 3
+            case .SortBy:
+                return 1
+            default:
+                return 0
+            }
+        } else {
+            return 0
+        }
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let filterType = FilterType.init(rawValue: section) {
+            switch filterType {
+            case .Category:
+                return "Category"
+            case .Deal:
+                return nil
+            case .Distance:
+                return "Distance"
+            case .SortBy:
+                return "Sort By"
+            default:
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     override func didReceiveMemoryWarning() {
@@ -188,8 +245,13 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func categorySwitchvalueChanged(sender: CategorySwitchCell, value: Bool) {
-        let rowNum = filterTableView.indexPath(for: sender)!.row
-        let category = categories[rowNum]
-        switchStateByCategory[category["code"]!] = value
+        let indexPath = filterTableView.indexPath(for: sender)!
+        if indexPath.section == FilterType.Deal.rawValue {
+            isDeal = value
+        } else {
+            let rowNum = indexPath.row
+            let category = categories[rowNum]
+            switchStateByCategory[category["code"]!] = value
+        }
     }
 }
