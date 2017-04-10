@@ -115,7 +115,8 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="dM2-uj-nXL">
-                        <barButtonItem key="rightBarButtonItem" title="Settings" id="tEy-gv-lOw">
+                        <barButtonItem key="leftBarButtonItem" title="Filter" id="tEy-gv-lOw">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="tappedSettings:" destination="2xI-yr-O5N" id="MKp-md-l86"/>
                                 <segue destination="gCG-qG-pqs" kind="modal" id="AU6-ez-rjl"/>
@@ -130,7 +131,7 @@
             </objects>
             <point key="canvasLocation" x="2727.1999999999998" y="357.57121439280365"/>
         </scene>
-        <!--Settings View Controller-->
+        <!--Filter-->
         <scene sceneID="fCQ-Fe-zan">
             <objects>
                 <viewController id="ZdL-zH-ISt" customClass="SettingsViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
@@ -221,13 +222,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="ccE-u8-U1h">
+                    <navigationItem key="navigationItem" title="Filter" id="ccE-u8-U1h">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="OrZ-48-04B">
                             <connections>
                                 <action selector="onCancelButton:" destination="ZdL-zH-ISt" id="JvD-Ww-mgL"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="Do7-eZ-GhC">
+                        <barButtonItem key="rightBarButtonItem" title="Search" id="Do7-eZ-GhC">
                             <connections>
                                 <action selector="onSaveButton:" destination="ZdL-zH-ISt" id="6lD-Uk-sTn"/>
                             </connections>
@@ -246,9 +247,13 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="R8N-R7-fv9" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="X8d-Xa-e6f">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="X8d-Xa-e6f">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.82745098039215681" green="0.13725490196078433" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -264,9 +269,14 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gCG-qG-pqs" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="bky-Kl-85G">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="bky-Kl-85G">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.82745098039215681" green="0.13725490196078433" blue="0.13725490196078433" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
